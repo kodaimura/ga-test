@@ -1,7 +1,6 @@
 package controller
 
 import (
-    "log"
     "github.com/gin-gonic/gin"
     
     "ginapp/pkg/jwtauth"
@@ -21,10 +20,7 @@ type indexController struct {
 
 
 func NewIndexController() IndexController {
-    ur, err := repository.NewUserRepository()
-    if err != nil {
-        log.Panic(err)
-    }
+    ur := repository.NewUserRepository()
     return indexController{ur}
 }
 

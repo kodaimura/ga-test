@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"log"
 	"database/sql"
 
 	"ginapp/internal/model/db"
@@ -9,25 +10,7 @@ import (
 )
 
 
-type UserRepository interface {
-	Select() ([]entity.User, error)
-    SelectByUId(uid int) (entity.User, error)
-    UpdateByUId(uid int, user entity.User) error
-    DeleteByUId(uid int) error
-
-    Signup(sd dto.SignupDto) error
-    SelectByUserName(userName string) (entity.User, error)
-    UpdatePasswordByUId(uid int, password string) error
-    UpdateUserNameByUId(uid int, userName string) error
-}
-
-
-type userRepository struct {
-	db *sql.DB
-}
-
-
-func NewUserRepository() (UserRepository, error) {
+func init() {
 	db := db.GetDB()
 
 	cmd := `
@@ -49,10 +32,32 @@ func NewUserRepository() (UserRepository, error) {
 	_, err := db.Exec(cmd)
 
 	if err != nil {
-		return nil, err
+		log.Panic(err)
 	}
+}
 
-	return &userRepository{db}, nil
+
+type UserRepository interface {
+	Select() ([]entity.User, error)
+    SelectByUId(uid int) (entity.User, error)
+    UpdateByUId(uid int, user entity.User) error
+    DeleteByUId(uid int) error
+
+    Signup(sd dto.SignupDto) error
+    SelectByUserName(userName string) (entity.User, error)
+    UpdatePasswordByUId(uid int, password string) error
+    UpdateUserNameByUId(uid int, userName string) error
+}
+
+
+type userRepository struct {
+	db *sql.DB
+}
+
+
+func NewUserRepository() UserRepository {
+	db := db.GetDB()
+	return &userRepository{db}
 }
 
 

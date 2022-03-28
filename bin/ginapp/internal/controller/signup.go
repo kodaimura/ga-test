@@ -1,7 +1,6 @@
 package controller
 
 import (
-    "log"
     "github.com/gin-gonic/gin"
     "golang.org/x/crypto/bcrypt"
     
@@ -23,10 +22,7 @@ type signupController struct {
 
 
 func NewSignupController() SignupController {
-    ur, err := repository.NewUserRepository()
-    if err != nil {
-        log.Panic(err)
-    }
+    ur := repository.NewUserRepository()
     return signupController{ur}
 }
 

@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"log"
 	"net/http"
 
     "github.com/gin-gonic/gin"
@@ -31,10 +30,7 @@ type authController struct {
 
 
 func NewAuthController() AuthController {
-	ur, err := repository.NewUserRepository()
-    if err != nil {
-        log.Panic(err)
-    }
+	ur := repository.NewUserRepository()
 	return authController{ur}
 }
 

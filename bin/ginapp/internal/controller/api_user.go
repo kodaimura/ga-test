@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"log"
 	"strconv"
 	"net/http"
 
@@ -24,10 +23,7 @@ type userController struct {
 
 
 func NewUserController() UserController {
-	ur, err := repository.NewUserRepository()
-    if err != nil {
-        log.Panic(err)
-    }
+	ur := repository.NewUserRepository()
 	return userController{ur}
 }
 
