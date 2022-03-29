@@ -27,6 +27,7 @@ func NewSignupController() SignupController {
 }
 
 
+//GET /signup
 func (sc signupController) SignupPage(c *gin.Context) {
     c.HTML(200, "signup.html", gin.H{
         "appname": constants.AppName,
@@ -34,6 +35,7 @@ func (sc signupController) SignupPage(c *gin.Context) {
 }
 
 
+//POST /signup
 func (sc signupController) Signup(c *gin.Context) {
     sd := &dto.SignupDto{} 
     sd.UserName = c.PostForm("username")

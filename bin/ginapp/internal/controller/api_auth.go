@@ -3,13 +3,13 @@ package controller
 import (
 	"net/http"
 
-    "github.com/gin-gonic/gin"
-    "golang.org/x/crypto/bcrypt"
-    
-    "ginapp/internal/dto"
-    "ginapp/internal/model/repository"
-    "ginapp/internal/constants"
-    "ginapp/pkg/jwtauth"
+	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
+
+	"ginapp/internal/dto"
+	"ginapp/internal/model/repository"
+	"ginapp/internal/constants"
+	"ginapp/pkg/jwtauth"
 
 )
 

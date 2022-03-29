@@ -29,6 +29,7 @@ func NewLoginController() LoginController {
 }
 
 
+//GET /login
 func (lc loginController) LoginPage(c *gin.Context) {
     c.HTML(200, "login.html", gin.H{
         "appname": constants.AppName,
@@ -36,6 +37,7 @@ func (lc loginController) LoginPage(c *gin.Context) {
 }
 
 
+//POST /login
 func (lc loginController) Login(c *gin.Context) {
     ld := &dto.LoginDto{}
     ld.UserName = c.PostForm("username")
@@ -67,6 +69,7 @@ func (lc loginController) Login(c *gin.Context) {
 }
 
 
+//GET /logout
 func (lc loginController) Logout(c *gin.Context) {
     c.SetCookie(jwtauth.JwtKeyName, "", 0, "/", constants.HostName, false, true)
     c.Redirect(303, "/login")

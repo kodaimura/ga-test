@@ -25,6 +25,7 @@ func NewIndexController() IndexController {
 }
 
 
+//GET /
 func (ic indexController) IndexPage(c *gin.Context) {
     username, err := jwtauth.ExtractUserName(c)
 
