@@ -10,7 +10,7 @@ import (
     _ "github.com/mattn/go-sqlite3"
 
     "ginapp/internal/controller"
-    "ginapp/pkg/jwtauth"
+    "ginapp/internal/pkg/jwtauth"
 )
 
 

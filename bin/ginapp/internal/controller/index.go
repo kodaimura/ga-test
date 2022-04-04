@@ -3,7 +3,7 @@ package controller
 import (
     "github.com/gin-gonic/gin"
     
-    "ginapp/pkg/jwtauth"
+    "ginapp/internal/pkg/jwtauth"
     "ginapp/internal/model/repository"
     "ginapp/internal/constants"
 )

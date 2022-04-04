@@ -127,7 +127,7 @@ func (ur *userRepository)SelectByUserName(userName string) (entity.User, error){
 	var user entity.User
 	err := ur.db.QueryRow(
 		`SELECT UID, USER_NAME, PASSWORD, CREATE_AT, UPDATE_AT 
-		FROM USERS WHERE USER_NAME = ?`, userName,
+		 FROM USERS WHERE USER_NAME = ?`, userName,
 	).Scan(
 		&user.UId, &user.UserName, &user.Password, &user.CreateAt, &user.UpdateAt,
 	)

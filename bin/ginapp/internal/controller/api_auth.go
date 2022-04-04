@@ -9,7 +9,7 @@ import (
 	"ginapp/internal/dto"
 	"ginapp/internal/model/repository"
 	"ginapp/internal/constants"
-	"ginapp/pkg/jwtauth"
+	"ginapp/internal/pkg/jwtauth"
 
 )
 
