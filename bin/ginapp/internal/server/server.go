@@ -9,6 +9,7 @@ import (
     "github.com/gin-gonic/gin"
     _ "github.com/mattn/go-sqlite3"
 
+    "ginapp/internal/constants"
     "ginapp/internal/controller"
     "ginapp/internal/pkg/jwtauth"
 )
@@ -17,7 +18,7 @@ import (
 func Run() {
     setLogger()
     r := router()
-    r.Run()
+    r.Run(constants.Port)
 }
 
 
