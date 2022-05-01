@@ -53,8 +53,8 @@ func (sc signupController) Signup(c *gin.Context) {
     hashed, _ := bcrypt.GenerateFromPassword([]byte(sd.Password), bcrypt.DefaultCost)
     sd.Password = string(hashed)
 
-    if sc.ur.Signup(*sd) != nil {
-        c.JSON(500, gin.H{
+    if sc.ur.Signup(sd) != nil {
+        c.HTML(500, "signup.html", gin.H{
             "appname": constants.AppName,
             "error": "登録に失敗しました。",
         })

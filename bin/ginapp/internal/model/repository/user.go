@@ -40,10 +40,10 @@ func init() {
 type UserRepository interface {
 	Select() ([]entity.User, error)
     SelectByUId(uid int) (entity.User, error)
-    UpdateByUId(uid int, user entity.User) error
+    UpdateByUId(uid int, user *entity.User) error
     DeleteByUId(uid int) error
 
-    Signup(sd dto.SignupDto) error
+    Signup(sd *dto.SignupDto) error
     SelectByUserName(userName string) (entity.User, error)
     UpdatePasswordByUId(uid int, password string) error
     UpdateUserNameByUId(uid int, userName string) error
@@ -61,7 +61,7 @@ func NewUserRepository() UserRepository {
 }
 
 
-func (ur *userRepository)Select() ([]entity.User, error){
+func (ur *userRepository) Select() ([]entity.User, error){
 	var users []entity.User
 
 	rows, err := ur.db.Query(
@@ -85,7 +85,7 @@ func (ur *userRepository)Select() ([]entity.User, error){
 }
 
 
-func (ur *userRepository)SelectByUId(uid int) (entity.User, error){
+func (ur *userRepository) SelectByUId(uid int) (entity.User, error){
 	var user entity.User
 	err := ur.db.QueryRow(
 		`SELECT UID, USER_NAME, CREATE_AT, UPDATE_AT FROM USERS WHERE UID = ?`, uid,
@@ -97,7 +97,7 @@ func (ur *userRepository)SelectByUId(uid int) (entity.User, error){
 }
 
 
-func (ur *userRepository)UpdateByUId(uid int, user entity.User) error {
+func (ur *userRepository) UpdateByUId(uid int, user *entity.User) error {
 	_, err := ur.db.Exec(
 		`UPDATE USERS SET USER_NAME = ? WHERE UID = ?`,
 		user.UserName, uid,
@@ -106,14 +106,14 @@ func (ur *userRepository)UpdateByUId(uid int, user entity.User) error {
 }
 
 
-func (ur *userRepository)DeleteByUId(uid int) error {
+func (ur *userRepository) DeleteByUId(uid int) error {
 	_, err := ur.db.Exec(`DELETE FROM USERS WHERE UID = ?`, uid)
 
 	return err
 }
 
 
-func (ur *userRepository)Signup(sd dto.SignupDto) error {
+func (ur *userRepository) Signup(sd *dto.SignupDto) error {
 	_, err := ur.db.Exec(
 		`INSERT INTO USERS (USER_NAME, PASSWORD) VALUES(?,?)`,
 		sd.UserName, sd.Password,
@@ -123,7 +123,7 @@ func (ur *userRepository)Signup(sd dto.SignupDto) error {
 }
 
 
-func (ur *userRepository)SelectByUserName(userName string) (entity.User, error){
+func (ur *userRepository) SelectByUserName(userName string) (entity.User, error){
 	var user entity.User
 	err := ur.db.QueryRow(
 		`SELECT UID, USER_NAME, PASSWORD, CREATE_AT, UPDATE_AT 
@@ -135,7 +135,7 @@ func (ur *userRepository)SelectByUserName(userName string) (entity.User, error){
 }
 
 
-func (ur *userRepository)UpdatePasswordByUId(uid int, password string) error {
+func (ur *userRepository) UpdatePasswordByUId(uid int, password string) error {
 	_, err := ur.db.Exec(
 		`UPDATE USERS SET PASSWORD = ? WHERE UID = ?`, password, uid,
 	)
@@ -143,7 +143,7 @@ func (ur *userRepository)UpdatePasswordByUId(uid int, password string) error {
 }
 
 
-func (ur *userRepository)UpdateUserNameByUId(uid int, userName string) error {
+func (ur *userRepository) UpdateUserNameByUId(uid int, userName string) error {
 	_, err := ur.db.Exec(
 		`UPDATE USERS SET USER_NAME = ? WHERE UID = ?`, userName, uid,
 	)

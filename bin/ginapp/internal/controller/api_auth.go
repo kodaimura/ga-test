@@ -73,7 +73,7 @@ func (ac authController) Signup(c *gin.Context) {
 	hashed, _ := bcrypt.GenerateFromPassword([]byte(sd.Password), bcrypt.DefaultCost)
 	sd.Password = string(hashed)
 
-	if ac.ur.Signup(*sd) != nil {
+	if ac.ur.Signup(sd) != nil {
 		c.JSON(500, gin.H{"error": http.StatusText(500)})
 		c.Abort()
 		return
