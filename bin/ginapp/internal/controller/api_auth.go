@@ -9,10 +9,14 @@ import (
 	"ginapp/internal/dto"
 	"ginapp/internal/model/repository"
 	"ginapp/internal/constants"
-	"ginapp/internal/pkg/jwtauth"
+	"ginapp/internal/auth/jwt"
 
 )
 
+/*
+login.goのJSONレスポンスver
+POST /api/login に対して jwtトークンをレスポンス
+*/
 
 type AuthController interface {
 	Login(c *gin.Context)
@@ -48,14 +52,14 @@ func (ac authController) Login(c *gin.Context) {
 		return
 	}
 
-	jwtString, err := jwtauth.GenerateJWT(user.UId, user.UserName)
+	jwtString, err := jwt.GenerateJWT(user.UId)
 	if err != nil {
 		c.JSON(500, gin.H{"error": http.StatusText(500)})
 		c.Abort()
 		return
 	}
-	c.SetCookie(jwtauth.JwtKeyName, jwtString, constants.CookieExpires, "/", constants.HostName, false, true)
-	c.JSON(200 , gin.H{jwtauth.JwtKeyName: jwtString})
+	c.SetCookie(jwt.JwtKeyName, jwtString, int(jwt.JwtExpires), "/", constants.HostName, false, true)
+	c.JSON(200 , gin.H{jwt.JwtKeyName: jwtString})
 }
 
 
@@ -85,7 +89,7 @@ func (ac authController) Signup(c *gin.Context) {
 
 //PUT[POST] /api/password
 func (ac authController) ChangePassword(c *gin.Context) {
-	uid, _ := jwtauth.ExtractUId(c)
+	uid, _ := jwt.ExtractUId(c)
 
 	var body map[string]interface{}
 	c.BindJSON(&body)
@@ -104,7 +108,7 @@ func (ac authController) ChangePassword(c *gin.Context) {
 
 //PUT[POST] /api/username
 func (ac authController) ChangeUserName(c *gin.Context) {
-	uid, _ := jwtauth.ExtractUId(c)
+	uid, _ := jwt.ExtractUId(c)
 	var body map[string]interface{}
 	c.BindJSON(&body)
 	newUserName := body["username"].(string)
@@ -121,7 +125,7 @@ func (ac authController) ChangeUserName(c *gin.Context) {
 
 //GET /api/profile
 func (ac authController) GetProfile(c *gin.Context) {
-	uid, _ := jwtauth.ExtractUId(c)
+	uid, _ := jwt.ExtractUId(c)
 	user, err := ac.ur.SelectByUId(uid)
 
 	if err != nil {
@@ -136,7 +140,7 @@ func (ac authController) GetProfile(c *gin.Context) {
 
 //DELETE /api/account
 func (ac authController) DeleteAccount(c *gin.Context) {
-	uid, _ := jwtauth.ExtractUId(c)
+	uid, _ := jwt.ExtractUId(c)
 
 	if ac.ur.DeleteByUId(uid) != nil {
 		c.JSON(500, gin.H{"error": http.StatusText(500)})

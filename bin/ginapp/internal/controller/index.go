@@ -3,7 +3,7 @@ package controller
 import (
     "github.com/gin-gonic/gin"
     
-    "ginapp/internal/pkg/jwtauth"
+    "ginapp/internal/auth/jwt"
     "ginapp/internal/model/repository"
     "ginapp/internal/constants"
 )
@@ -27,7 +27,7 @@ func NewIndexController() IndexController {
 
 //GET /
 func (ic indexController) IndexPage(c *gin.Context) {
-    username, err := jwtauth.ExtractUserName(c)
+    username, err := jwt.ExtractUserName(c)
 
     if err != nil {
         c.Redirect(303, "/login")

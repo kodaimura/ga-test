@@ -11,7 +11,7 @@ import (
 
     "ginapp/internal/constants"
     "ginapp/internal/controller"
-    "ginapp/internal/pkg/jwtauth"
+    "ginapp/internal/auth/jwt"
 )
 
 
@@ -73,7 +73,7 @@ func router() *gin.Engine {
     ic := controller.NewIndexController()
     //ROOT (Authentication required)
     auth := r.Group("/")
-    auth.Use(jwtauth.JwtAuthMiddleware())
+    auth.Use(jwt.JwtAuthMiddleware())
     {
         auth.GET("/", ic.IndexPage)
     }
@@ -88,7 +88,7 @@ func router() *gin.Engine {
     
         //API (Authentication required)
         apiAuth := api.Group("/")
-        apiAuth.Use(jwtauth.JwtApiAuthMiddleware())
+        apiAuth.Use(jwt.JwtApiAuthMiddleware())
         {
             apiAuth.GET("/profile", ac.GetProfile)
             apiAuth.PUT("/username", ac.ChangeUserName)

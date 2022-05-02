@@ -4,7 +4,7 @@ import (
     "github.com/gin-gonic/gin"
     "golang.org/x/crypto/bcrypt"
     
-    "ginapp/internal/pkg/jwtauth"
+    "ginapp/internal/auth/jwt"
     "ginapp/internal/dto"
     "ginapp/internal/model/repository"
     "ginapp/internal/constants"
@@ -54,7 +54,7 @@ func (lc loginController) Login(c *gin.Context) {
         return
     }
 
-    jwtString, err := jwtauth.GenerateJWT(user.UId, user.UserName)
+    jwtString, err := jwt.GenerateJWT(user.UId)
     if err != nil {
         c.HTML(500, "login.html", gin.H{
             "appname": constants.AppName,
@@ -64,13 +64,13 @@ func (lc loginController) Login(c *gin.Context) {
         return
     }
 
-    c.SetCookie(jwtauth.JwtKeyName, jwtString, constants.CookieExpires, "/", constants.HostName, false, true)
+    c.SetCookie(jwt.JwtKeyName, jwtString, int(jwt.JwtExpires), "/", constants.HostName, false, true)
     c.Redirect(303, "/")
 }
 
 
 //GET /logout
 func (lc loginController) Logout(c *gin.Context) {
-    c.SetCookie(jwtauth.JwtKeyName, "", 0, "/", constants.HostName, false, true)
+    c.SetCookie(jwt.JwtKeyName, "", 0, "/", constants.HostName, false, true)
     c.Redirect(303, "/login")
 }
