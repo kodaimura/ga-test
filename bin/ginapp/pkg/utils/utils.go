@@ -27,16 +27,16 @@ func ItoaSlice(sl []int) []string {
 } 
 
 
-func Combinations(sl []string, n int) [][]string{
-    combs := [][]string{}
+func Combinations[T any](sl []T, n int) [][]T {
+    combs := [][]T{}
 
     if len(sl) <= n{
-        return [][]string{sl} 
+        return [][]T{sl} 
     } 
 
     if n == 1 {
         for _, x := range sl {
-            combs = append(combs, []string{x})
+            combs = append(combs, []T{x})
         }
         return combs
     }
