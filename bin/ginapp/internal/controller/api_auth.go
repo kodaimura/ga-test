@@ -22,7 +22,7 @@ type AuthController interface {
 	Login(c *gin.Context)
 	Signup(c *gin.Context)
 	ChangePassword(c *gin.Context)
-	ChangeUserName(c *gin.Context)
+	ChangeUsername(c *gin.Context)
 	GetProfile(c *gin.Context)
 	DeleteAccount(c *gin.Context)
 }
@@ -44,7 +44,7 @@ func (ac authController) Login(c *gin.Context) {
 	ld := &dto.LoginDto{}
 	c.BindJSON(&ld)
 
-	user, err := ac.ur.SelectByUserName(ld.UserName)
+	user, err := ac.ur.SelectByUsername(ld.Username)
 
 	if err != nil || bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(ld.Password)) != nil{
 		c.JSON(401, gin.H{"error": http.StatusText(401)})
@@ -58,8 +58,8 @@ func (ac authController) Login(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	c.SetCookie(jwt.JwtKeyName, jwtString, int(jwt.JwtExpires), "/", constants.HostName, false, true)
-	c.JSON(200 , gin.H{jwt.JwtKeyName: jwtString})
+	c.SetCookie(jwt.JwtKeyname, jwtString, int(jwt.JwtExpires), "/", constants.Hostname, false, true)
+	c.JSON(200 , gin.H{jwt.JwtKeyname: jwtString})
 }
 
 
@@ -68,7 +68,7 @@ func (ac authController) Signup(c *gin.Context) {
 	sd := &dto.SignupDto{} 
 	c.BindJSON(&sd)
 
-	if _, err := ac.ur.SelectByUserName(sd.UserName); err == nil {
+	if _, err := ac.ur.SelectByUsername(sd.Username); err == nil {
 		c.JSON(409, gin.H{"error": http.StatusText(409)})
 		c.Abort()
 		return
@@ -107,13 +107,13 @@ func (ac authController) ChangePassword(c *gin.Context) {
 
 
 //PUT[POST] /api/username
-func (ac authController) ChangeUserName(c *gin.Context) {
+func (ac authController) ChangeUsername(c *gin.Context) {
 	uid, _ := jwt.ExtractUId(c)
 	var body map[string]interface{}
 	c.BindJSON(&body)
-	newUserName := body["username"].(string)
+	newUsername := body["username"].(string)
 
-	if err := ac.ur.UpdateUserNameByUId(uid, newUserName); err != nil {
+	if err := ac.ur.UpdateUsernameByUId(uid, newUsername); err != nil {
 		c.JSON(500, gin.H{"error": http.StatusText(500)})
 		c.Abort()
 		return

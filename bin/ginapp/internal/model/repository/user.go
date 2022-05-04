@@ -16,7 +16,7 @@ func init() {
 	cmd := `
 		CREATE TABLE IF NOT EXISTS USERS (
 			UID INTEGER PRIMARY KEY AUTOINCREMENT,
-			USER_NAME VARCHAR(100) NOT NULL UNIQUE,
+			USERNAME VARCHAR(100) NOT NULL UNIQUE,
 			PASSWORD VARCHAR(100) NOT NULL,
 			CREATE_AT TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime')),
 			UPDATE_AT TEXT NOT NULL DEFAULT (DATETIME('now', 'localtime'))
@@ -44,9 +44,9 @@ type UserRepository interface {
     DeleteByUId(uid int) error
 
     Signup(sd *dto.SignupDto) error
-    SelectByUserName(userName string) (entity.User, error)
+    SelectByUsername(username string) (entity.User, error)
     UpdatePasswordByUId(uid int, password string) error
-    UpdateUserNameByUId(uid int, userName string) error
+    UpdateUsernameByUId(uid int, username string) error
 }
 
 
@@ -67,7 +67,7 @@ func (ur *userRepository) Select() ([]entity.User, error){
 	rows, err := ur.db.Query(
 		`SELECT 
 			UID,
-			USER_NAME, 
+			USERNAME, 
 			CREATE_AT, 
 			UPDATE_AT 
 		 FROM USERS`,
@@ -79,7 +79,7 @@ func (ur *userRepository) Select() ([]entity.User, error){
 
 	for rows.Next() {
 		user := entity.User{}
-		err = rows.Scan(&user.UId, &user.UserName, &user.CreateAt, &user.UpdateAt)
+		err = rows.Scan(&user.UId, &user.Username, &user.CreateAt, &user.UpdateAt)
 		if err != nil {
 			break
 		}
@@ -95,13 +95,13 @@ func (ur *userRepository) SelectByUId(uid int) (entity.User, error){
 	err := ur.db.QueryRow(
 		`SELECT 
 			UID, 
-			USER_NAME, 
+			USERNAME, 
 			CREATE_AT, 
 			UPDATE_AT 
 		 FROM USERS 
 		 WHERE UID = ?`, uid,
 	).Scan(
-		&user.UId, &user.UserName, &user.CreateAt, &user.UpdateAt,
+		&user.UId, &user.Username, &user.CreateAt, &user.UpdateAt,
 	)
 
 	return user, err
@@ -112,9 +112,9 @@ func (ur *userRepository) UpdateByUId(uid int, user *entity.User) error {
 	_, err := ur.db.Exec(
 		`UPDATE USERS 
 		 SET 
-			USER_NAME = ? 
+			USERNAME = ? 
 		 WHERE UID = ?`,
-		user.UserName, uid,
+		user.Username, uid,
 	)
 	return err
 }
@@ -130,29 +130,30 @@ func (ur *userRepository) DeleteByUId(uid int) error {
 func (ur *userRepository) Signup(sd *dto.SignupDto) error {
 	_, err := ur.db.Exec(
 		`INSERT INTO USERS (
-			USER_NAME, PASSWORD
+			USERNAME, PASSWORD
 		 ) VALUES(?,?)`,
-		sd.UserName, sd.Password,
+		sd.Username, sd.Password,
 	)
 
 	return err
 }
 
 
-func (ur *userRepository) SelectByUserName(userName string) (entity.User, error){
+func (ur *userRepository) SelectByUsername(username string) (entity.User, error){
 	var user entity.User
 	err := ur.db.QueryRow(
 		`SELECT 
 			UID, 
-			USER_NAME, 
+			USERNAME, 
 			PASSWORD, 
 			CREATE_AT, 
 			UPDATE_AT 
 		 FROM USERS 
-		 WHERE USER_NAME = ?`, userName,
+		 WHERE USERNAME = ?`, username,
 	).Scan(
-		&user.UId, &user.UserName, &user.Password, &user.CreateAt, &user.UpdateAt,
+		&user.UId, &user.Username, &user.Password, &user.CreateAt, &user.UpdateAt,
 	)
+
 	return user, err
 }
 
@@ -168,12 +169,12 @@ func (ur *userRepository) UpdatePasswordByUId(uid int, password string) error {
 }
 
 
-func (ur *userRepository) UpdateUserNameByUId(uid int, userName string) error {
+func (ur *userRepository) UpdateUsernameByUId(uid int, username string) error {
 	_, err := ur.db.Exec(
 		`UPDATE USERS 
 		 SET 
-		 	USER_NAME = ? 
-		 WHERE UID = ?`, userName, uid,
+		 	USERNAME = ? 
+		 WHERE UID = ?`, username, uid,
 	)
 	return err
 }

@@ -30,7 +30,7 @@ func NewSignupController() SignupController {
 //GET /signup
 func (sc signupController) SignupPage(c *gin.Context) {
     c.HTML(200, "signup.html", gin.H{
-        "appname": constants.AppName,
+        "appname": constants.Appname,
     })
 }
 
@@ -38,12 +38,12 @@ func (sc signupController) SignupPage(c *gin.Context) {
 //POST /signup
 func (sc signupController) Signup(c *gin.Context) {
     sd := &dto.SignupDto{} 
-    sd.UserName = c.PostForm("username")
+    sd.Username = c.PostForm("username")
     sd.Password = c.PostForm("password")
 
-    if _, err := sc.ur.SelectByUserName(sd.UserName); err == nil {
+    if _, err := sc.ur.SelectByUsername(sd.Username); err == nil {
         c.HTML(409, "signup.html", gin.H{
-            "appname": constants.AppName,
+            "appname": constants.Appname,
             "error": "Usernameが既に使われています。",
         })
         c.Abort()
@@ -55,7 +55,7 @@ func (sc signupController) Signup(c *gin.Context) {
 
     if sc.ur.Signup(sd) != nil {
         c.HTML(500, "signup.html", gin.H{
-            "appname": constants.AppName,
+            "appname": constants.Appname,
             "error": "登録に失敗しました。",
         })
         c.Abort()

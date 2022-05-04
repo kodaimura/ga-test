@@ -32,6 +32,7 @@ done
 cat <<EOF > .gitignore
 log/
 *.db
+*.sqlite3
 .env
 .DS_Store
 main

@@ -24,7 +24,7 @@ type JwtPayload struct {
 	jwtpackage.StandardClaims
 
 	UId int `json:"uid"`
-    UserName string `json:"username"`
+    Username string `json:"username"`
 }
 
 
@@ -41,7 +41,7 @@ func GeneratePayload(uid int) (JwtPayload, error) {
 	pl.IssuedAt =  time.Now().Unix()
     pl.ExpiresAt = time.Now().Add(time.Second * JwtExpires).Unix()
 	pl.UId = uid
-	pl.UserName = user.UserName
+	pl.Username = user.Username
 
 	return pl, nil
 }
@@ -58,11 +58,11 @@ func ExtractUId (c *gin.Context) (int, error) {
 }
 
 
-func ExtractUserName (c *gin.Context) (string, error) {
+func ExtractUsername (c *gin.Context) (string, error) {
 	pl := c.Keys["payload"]
 	if pl == nil {
-		return "", errors.New("ExtractUserName error")
+		return "", errors.New("ExtractUsername error")
 	} else {
-		return pl.(JwtPayload).UserName, nil
+		return pl.(JwtPayload).Username, nil
 	}
 }

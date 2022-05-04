@@ -32,7 +32,7 @@ func NewLoginController() LoginController {
 //GET /login
 func (lc loginController) LoginPage(c *gin.Context) {
     c.HTML(200, "login.html", gin.H{
-        "appname": constants.AppName,
+        "appname": constants.Appname,
     })
 }
 
@@ -40,14 +40,14 @@ func (lc loginController) LoginPage(c *gin.Context) {
 //POST /login
 func (lc loginController) Login(c *gin.Context) {
     ld := &dto.LoginDto{}
-    ld.UserName = c.PostForm("username")
+    ld.Username = c.PostForm("username")
     ld.Password = c.PostForm("password")
 
-    user, err := lc.ur.SelectByUserName(ld.UserName)
+    user, err := lc.ur.SelectByUsername(ld.Username)
 
     if err != nil || bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(ld.Password)) != nil{
         c.HTML(401, "login.html", gin.H{
-            "appname":constants.AppName,
+            "appname":constants.Appname,
             "error": "UsernameまたはPasswordが異なります。",
         })
         c.Abort()
@@ -57,20 +57,20 @@ func (lc loginController) Login(c *gin.Context) {
     jwtString, err := jwt.GenerateJWT(user.UId)
     if err != nil {
         c.HTML(500, "login.html", gin.H{
-            "appname": constants.AppName,
+            "appname": constants.Appname,
             "error": "ログインに失敗しました。",
         })
         c.Abort()
         return
     }
 
-    c.SetCookie(jwt.JwtKeyName, jwtString, int(jwt.JwtExpires), "/", constants.HostName, false, true)
+    c.SetCookie(jwt.JwtKeyname, jwtString, int(jwt.JwtExpires), "/", constants.Hostname, false, true)
     c.Redirect(303, "/")
 }
 
 
 //GET /logout
 func (lc loginController) Logout(c *gin.Context) {
-    c.SetCookie(jwt.JwtKeyName, "", 0, "/", constants.HostName, false, true)
+    c.SetCookie(jwt.JwtKeyname, "", 0, "/", constants.Hostname, false, true)
     c.Redirect(303, "/login")
 }

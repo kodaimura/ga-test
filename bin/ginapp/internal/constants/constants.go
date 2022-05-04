@@ -1,8 +1,8 @@
 package constants
 
 
-const AppName string = "ginapp"
+const Appname string = "ginapp"
 
-const HostName string = "localhost"
+const Hostname string = "localhost"
 
 const Port string = ":8080"

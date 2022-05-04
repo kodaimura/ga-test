@@ -12,7 +12,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-const JwtKeyName string = "access_token"
+const JwtKeyname string = "access_token"
 var secretKey string
 
 func init () {
@@ -99,7 +99,7 @@ func extractTokenString (c *gin.Context) (string, error) {
 */
 
 func extractTokenString (c *gin.Context) (string, error) {
-	return c.Cookie(JwtKeyName)
+	return c.Cookie(JwtKeyname)
 } 
 
 

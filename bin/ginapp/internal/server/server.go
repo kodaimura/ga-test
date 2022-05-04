@@ -91,8 +91,8 @@ func router() *gin.Engine {
         apiAuth.Use(jwt.JwtApiAuthMiddleware())
         {
             apiAuth.GET("/profile", ac.GetProfile)
-            apiAuth.PUT("/username", ac.ChangeUserName)
-            apiAuth.POST("/username", ac.ChangeUserName)
+            apiAuth.PUT("/username", ac.ChangeUsername)
+            apiAuth.POST("/username", ac.ChangeUsername)
             apiAuth.PUT("/password", ac.ChangePassword)
             apiAuth.POST("/password", ac.ChangePassword)
             apiAuth.DELETE("/account", ac.DeleteAccount)

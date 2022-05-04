@@ -27,7 +27,7 @@ func NewIndexController() IndexController {
 
 //GET /
 func (ic indexController) IndexPage(c *gin.Context) {
-    username, err := jwt.ExtractUserName(c)
+    username, err := jwt.ExtractUsername(c)
 
     if err != nil {
         c.Redirect(303, "/login")
@@ -35,7 +35,7 @@ func (ic indexController) IndexPage(c *gin.Context) {
     }
 
     c.HTML(200, "index.html", gin.H{
-        "appname": constants.AppName,
+        "appname": constants.Appname,
         "username": username,
     })
 }

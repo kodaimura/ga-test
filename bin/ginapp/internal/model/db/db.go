@@ -15,8 +15,8 @@ var db *sql.DB
 func init() {
     var err error
 
-    dbName := "./" + constants.AppName + ".db"
-    db, err = sql.Open("sqlite3", dbName)
+    dbname := "./" + constants.Appname + ".db"
+    db, err = sql.Open("sqlite3", dbname)
 
     if err != nil {
         log.Panic(err)
