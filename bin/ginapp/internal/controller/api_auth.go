@@ -10,6 +10,7 @@ import (
 	"ginapp/internal/model/repository"
 	"ginapp/internal/constants"
 	"ginapp/internal/auth/jwt"
+	"ginapp/internal/pkg/logger"
 
 )
 
@@ -54,6 +55,7 @@ func (ac authController) Login(c *gin.Context) {
 
 	jwtString, err := jwt.GenerateJWT(user.UId)
 	if err != nil {
+		logger.LogError(err.Error())
 		c.JSON(500, gin.H{"error": http.StatusText(500)})
 		c.Abort()
 		return
@@ -77,7 +79,8 @@ func (ac authController) Signup(c *gin.Context) {
 	hashed, _ := bcrypt.GenerateFromPassword([]byte(sd.Password), bcrypt.DefaultCost)
 	sd.Password = string(hashed)
 
-	if ac.ur.Signup(sd) != nil {
+	if err := ac.ur.Signup(sd); err != nil {
+		logger.LogError(err.Error())
 		c.JSON(500, gin.H{"error": http.StatusText(500)})
 		c.Abort()
 		return
@@ -97,6 +100,7 @@ func (ac authController) ChangePassword(c *gin.Context) {
 	hashed, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
 
 	if err != nil || ac.ur.UpdatePasswordByUId(uid, string(hashed)) != nil {
+		logger.LogError(err.Error())
 		c.JSON(500, gin.H{"error": http.StatusText(500)})
 		c.Abort()
 		return
@@ -114,6 +118,7 @@ func (ac authController) ChangeUsername(c *gin.Context) {
 	newUsername := body["username"].(string)
 
 	if err := ac.ur.UpdateUsernameByUId(uid, newUsername); err != nil {
+		logger.LogError(err.Error())
 		c.JSON(500, gin.H{"error": http.StatusText(500)})
 		c.Abort()
 		return
@@ -129,6 +134,7 @@ func (ac authController) GetProfile(c *gin.Context) {
 	user, err := ac.ur.SelectByUId(uid)
 
 	if err != nil {
+		logger.LogError(err.Error())
 		c.JSON(500, gin.H{"error": http.StatusText(500)})
 		c.Abort()
 		return
@@ -142,7 +148,8 @@ func (ac authController) GetProfile(c *gin.Context) {
 func (ac authController) DeleteAccount(c *gin.Context) {
 	uid, _ := jwt.ExtractUId(c)
 
-	if ac.ur.DeleteByUId(uid) != nil {
+	if err := ac.ur.DeleteByUId(uid); err != nil {
+		logger.LogError(err.Error())
 		c.JSON(500, gin.H{"error": http.StatusText(500)})
 		c.Abort()
 		return

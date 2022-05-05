@@ -8,6 +8,7 @@ import (
     "ginapp/internal/dto"
     "ginapp/internal/model/repository"
     "ginapp/internal/constants"
+    "ginapp/internal/pkg/logger"
 )
 
 
@@ -56,6 +57,7 @@ func (lc loginController) Login(c *gin.Context) {
 
     jwtString, err := jwt.GenerateJWT(user.UId)
     if err != nil {
+        logger.LogError(err.Error())
         c.HTML(500, "login.html", gin.H{
             "appname": constants.Appname,
             "error": "ログインに失敗しました。",

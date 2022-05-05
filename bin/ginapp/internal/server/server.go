@@ -1,51 +1,20 @@
 package server
 
 import (
-    "log"
-    "io"
-    "os"
-    "time"
-
     "github.com/gin-gonic/gin"
     _ "github.com/mattn/go-sqlite3"
 
     "ginapp/internal/constants"
     "ginapp/internal/controller"
     "ginapp/internal/auth/jwt"
+    "ginapp/internal/pkg/logger"
 )
 
 
 func Run() {
-    setLogger()
+    logger.SetAccessLogger()
     r := router()
     r.Run(constants.Port)
-}
-
-
-func setLogger () {
-    logfolder := "log"
-    logfile := "log/app.log"
-
-    if _, err := os.Stat(logfolder); err != nil {
-        os.Mkdir(logfolder, 0777)
-    }
-
-    if _, err := os.Stat(logfile); err == nil {
-        t := time.Now()
-        format := "2006-01-02-15-04-05"
-        fname := "log/~" + t.Format(format) + ".log"
-        if err := os.Rename(logfile, fname); err != nil {
-            log.Panic(err)
-        }
-    }
-
-    f, err := os.Create(logfile); 
-
-    if err != nil {
-        log.Panic(err)
-    }
-
-    gin.DefaultWriter = io.MultiWriter(os.Stdout, f)
 }
 
 

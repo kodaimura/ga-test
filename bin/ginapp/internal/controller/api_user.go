@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"ginapp/internal/model/repository"
+	"ginapp/internal/pkg/logger"
 	"github.com/gin-gonic/gin"
 )
 
@@ -32,6 +33,7 @@ func (uc userController) GetUsers(c *gin.Context) {
 	users, err := uc.ur.Select()
 
 	if err != nil {
+		logger.LogError(err.Error())
 		c.JSON(500, gin.H{"error": http.StatusText(500)})
 		c.Abort()
 		return
@@ -46,6 +48,7 @@ func (uc userController) GetUserByUId(c *gin.Context) {
 	user, err := uc.ur.SelectByUId(uid)
 
 	if err != nil {
+		logger.LogError(err.Error()) 
 		c.JSON(500, gin.H{"error": http.StatusText(500)})
 		c.Abort()
 		return
@@ -58,7 +61,8 @@ func (uc userController) GetUserByUId(c *gin.Context) {
 //DELETE /admin/users/:uid
 func (uc userController) DeleteUserByUId(c *gin.Context) {
 	uid,_ := strconv.Atoi(c.Param("uid"))
-	if uc.ur.DeleteByUId(uid) != nil {
+	if err := uc.ur.DeleteByUId(uid); err != nil {
+		logger.LogError(err.Error())
 		c.JSON(500, gin.H{"error": http.StatusText(500)})
 		c.Abort()
 		return
