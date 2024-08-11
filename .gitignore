@@ -1,5 +1,0 @@
-log/
-*.db
-.env
-.DS_Store
-main
