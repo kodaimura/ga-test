@@ -70,10 +70,9 @@
   </style>
 
   <script>
-    let gaInitialized = false;
-
-    const loadGA = (measurementId) => {
-      if (gaInitialized) return;
+    const initGA = () => {
+      const measurementId = document.getElementById("measurementId").value.trim();
+      if (!measurementId) return;
 
       const script1 = document.createElement("script");
       script1.src = "https://www.googletagmanager.com/gtag/js?id=" + measurementId;
@@ -86,8 +85,7 @@
         window.gtag = gtag;
         gtag('js', new Date());
         gtag('config', measurementId);
-        gaInitialized = true;
-        alert("GA Initialized with ID: " + measurementId);
+        alert("GA初期化完了: " + measurementId);
       };
     }
 
@@ -96,8 +94,13 @@
       const eventName = document.getElementById("eventName").value.trim();
       const paramsText = document.getElementById("eventParams").value.trim();
 
-      if (!measurementId || !eventName) {
-        alert("測定IDとイベント名を入力してください");
+      if (!measurementId) {
+        alert("測定IDを入力してください");
+        return;
+      }
+
+      if (!eventName) {
+        alert("イベント名を入力してください");
         return;
       }
 
@@ -105,21 +108,14 @@
       if (paramsText) {
         try {
           params = JSON.parse(paramsText);
-        } catch (e) {
+        } catch {
           alert("パラメータが正しいJSON形式ではありません");
           return;
         }
       }
 
-      if (!gaInitialized) {
-        loadGA(measurementId, () => {
-          gtag('event', eventName, params);
-          alert(`送信しました: event = ${eventName}`);
-        });
-      } else {
-        gtag('event', eventName, params);
-        alert(`送信しました: event = ${eventName}`);
-      }
+      gtag('event', eventName, params);
+      alert(`送信しました: event = ${eventName}`);
     }
   </script>
 </head>
@@ -129,7 +125,7 @@
     <h1>GA4 イベント送信ツール</h1>
 
     <label for="measurementId">GA4 測定ID (例: G-XXXXXXX):</label>
-    <input type="text" id="measurementId" />
+    <input type="text" id="measurementId" onchange="initGA()" />
 
     <label for="eventName">イベント名:</label>
     <input type="text" id="eventName" />
