@@ -101,10 +101,6 @@
         return;
       }
 
-      if (!gaInitialized) {
-        loadGA(measurementId);
-      }
-
       let params = {};
       if (paramsText) {
         try {
@@ -115,8 +111,15 @@
         }
       }
 
-      gtag('event', eventName, params);
-      alert(`送信しました: event = ${eventName}`);
+      if (!gaInitialized) {
+        loadGA(measurementId, () => {
+          gtag('event', eventName, params);
+          alert(`送信しました: event = ${eventName}`);
+        });
+      } else {
+        gtag('event', eventName, params);
+        alert(`送信しました: event = ${eventName}`);
+      }
     }
   </script>
 </head>
