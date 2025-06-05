@@ -1,1 +1,1 @@
-# WordPress 練習用
+# Google Analytics Data API 検証用サイト
